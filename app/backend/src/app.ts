@@ -1,13 +1,10 @@
 import * as express from 'express';
 
 class App {
-  public app: express.Express;
-  // ...
+  public app: express.Express = express();
 
   constructor() {
-    // ...
     this.config();
-    // ...
   }
 
   private config():void {
@@ -19,16 +16,16 @@ class App {
     };
 
     this.app.use(accessControl);
-    // ...
+    this.app.use(express.json());
   }
 
-  // ...
   public start(PORT: string | number):void {
-    // ...
+    this.app.listen(PORT, () => {
+      console.log(`server working in ${PORT}`);
+    });
   }
 }
 
 export { App };
 
-// A execução dos testes de cobertura depende dessa exportação
 export const { app } = new App();
