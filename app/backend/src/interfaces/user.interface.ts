@@ -22,3 +22,9 @@ export type UserToLogin = {
 };
 
 export type UserData = Pick<User, 'email' | 'password'>;
+
+export type DataPayload = {
+  data: Pick<User, 'email' | 'password'>;
+  iat: number;
+  exp: number;
+};

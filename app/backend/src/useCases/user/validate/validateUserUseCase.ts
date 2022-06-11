@@ -1,8 +1,8 @@
-import UserRepository from '../../repositories/UserRepository';
+import IErrorHttp from '../../../middleware/error/errorHttp';
 import ILoginUseCaseResponse from '../../../interfaces/loginValidate.interface';
 import JwtLogin from '../../../services/Jwt';
 import UseCase from '../../../interfaces/generics/useCases.abstract';
-import IErrorHttp from '../../../middleware/error/errorHttp';
+import UserRepository from '../../repositories/UserRepository';
 
 export default class ValidateUserUseCase extends UseCase {
   constructor(private userRepository: UserRepository, private auth: JwtLogin) {
@@ -12,7 +12,7 @@ export default class ValidateUserUseCase extends UseCase {
   public async execute(token: string): Promise<ILoginUseCaseResponse> {
     const authorized = this.auth.verify(token);
 
-    if (!authorized || (typeof authorized === 'string')) throw new IErrorHttp(401, 'Unauthorized');
+    if (!authorized) throw new IErrorHttp(401, 'Unauthorized');
 
     const user = await this.userRepository.findByEmail(authorized.email);
 
