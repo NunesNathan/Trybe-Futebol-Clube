@@ -4,7 +4,7 @@ import AllTeamsUseCase from './allTeamsUseCase';
 export default class AllTeamsController {
   constructor(private allTeamsUseCase: AllTeamsUseCase) { }
 
-  public async handle(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  public async handle(_req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { status, data } = await this.allTeamsUseCase.execute();
 
