@@ -1,11 +1,11 @@
-import * as bcrypt from 'bcrypt';
+import * as bcryptjs from 'bcryptjs';
 
 export default class Encryptjs {
   static async encrypt(data: string) {
-    return bcrypt.hash(data, 10);
+    return bcryptjs.hash(data, 10);
   }
 
   static async verify(data: string, encrypted: string) {
-    return bcrypt.compareSync(data, encrypted);
+    return bcryptjs.compareSync(data, encrypted);
   }
 }

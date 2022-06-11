@@ -1,7 +1,7 @@
 import JwtLogin from '../../../services/Jwt';
+import UserRepository from '../../repositories/UserRepository';
 import ValidateUserController from './validateUserController';
 import ValidateUserUseCase from './validateUserUseCase';
-import UserRepository from '../../repositories/UserRepository';
 
 const jwtLogin = new JwtLogin();
 
