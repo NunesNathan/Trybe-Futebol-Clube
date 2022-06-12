@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import IErrorHttp from '../../../middleware/error/errorHttp';
 import ValidateUserUseCase from './validateUserUseCase';
 
 export default class ValidateUserController {
@@ -7,11 +6,9 @@ export default class ValidateUserController {
 
   public async handle(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const { authorization } = req.headers;
+      const { authorized } = res.locals;
 
-      if (!authorization) throw new IErrorHttp(401, 'Unauthorized');
-
-      const { status, data } = await this.validateUserUseCase.execute(authorization);
+      const { status, data } = await this.validateUserUseCase.execute(authorized.email);
 
       res.status(status).json(data);
     } catch (error) {
