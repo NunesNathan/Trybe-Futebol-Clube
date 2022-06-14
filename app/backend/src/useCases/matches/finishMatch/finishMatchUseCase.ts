@@ -2,21 +2,20 @@ import MatchesRepository from '../../repositories/MatchesRepository';
 import UseCase from '../../../interfaces/generics/useCases.abstract';
 import IErrorHttp from '../../../middleware/error/errorHttp';
 import { caseResponse } from '../../../interfaces/generics/generics.interface';
-import { ReqSaveMatch } from '../../../interfaces/matches.interface';
 
-export default class SaveMatchUseCase extends UseCase {
+export default class FinishMatchUseCase extends UseCase {
   constructor(private matchesRepository: MatchesRepository) {
     super();
   }
 
-  public async execute(body: ReqSaveMatch): Promise<caseResponse> {
-    const match = await this.matchesRepository.save(body);
+  public async execute(id: number): Promise<caseResponse> {
+    const match = await this.matchesRepository.finish(id);
 
-    if (!match) throw new IErrorHttp(404, 'Not Found');
+    if (!match) throw new IErrorHttp(409, 'Already finished or does not found');
 
     return {
-      status: 201,
-      data: match,
+      status: 200,
+      data: 'Finished',
     };
   }
 }
