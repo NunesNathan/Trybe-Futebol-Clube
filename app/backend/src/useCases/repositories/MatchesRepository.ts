@@ -26,4 +26,11 @@ export default class MatchesRepository implements IMatchesRepository {
 
     return match;
   }
+
+  async finish(id: number): Promise<boolean> {
+    const [match] = await this.model
+      .update({ inProgress: false }, { where: { id } }) as unknown as number[];
+
+    return !!match;
+  }
 }
