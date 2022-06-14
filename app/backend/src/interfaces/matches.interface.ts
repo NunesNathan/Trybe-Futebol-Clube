@@ -13,6 +13,10 @@ export type Match = {
   }
 };
 
-export type ModelMatches = Omit<Match, 'teamHome' | 'teamAway'>[];
+export type ModelMatch = Omit<Match, 'teamHome' | 'teamAway'>;
+
+export type ModelMatches = ModelMatch[];
+
+export type ReqSaveMatch = Omit<ModelMatch, 'id'>;
 
 export type Matches = Match[];
