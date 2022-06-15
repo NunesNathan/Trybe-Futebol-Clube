@@ -20,3 +20,13 @@ export type ModelMatches = ModelMatch[];
 export type ReqSaveMatch = Omit<ModelMatch, 'id'>;
 
 export type Matches = Match[];
+
+type MatchGoals = {
+  homeTeamGoals: number,
+  awayTeamGoals: number,
+};
+
+export type UpdateBody = {
+  id: number,
+  body: MatchGoals,
+};
