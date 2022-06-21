@@ -12,14 +12,14 @@ import {
 import { ModelMatches } from '../../../interfaces/matches.interface';
 import UtilsAway from '../../../utils/utilsAway';
 import UtilsHome from '../../../utils/utilsHome';
+import DoAll from '../../../utils/doAll';
 
 export default class AllResultsInUseCase extends UseCase {
   constructor(private leaderboardsRepository: LeaderboardsRepository) {
     super();
   }
 
-  private static calculate(results: ModelMatches, side: string): CalculateSide {
-    const util = side === 'home' ? new UtilsHome(results) : new UtilsAway(results);
+  private static createCalculatedSide(util: UtilsAway | UtilsHome | DoAll): CalculateSide {
     return ({
       totalPoints: util.totalPoints,
       totalGames: util.totalGames,
@@ -33,16 +33,26 @@ export default class AllResultsInUseCase extends UseCase {
     });
   }
 
+  private static calculate(results: ModelMatches | ModelTeamMatch, side: string): CalculateSide {
+    if (!(results instanceof Array)) {
+      const util = new DoAll(results);
+
+      return AllResultsInUseCase.createCalculatedSide(util);
+    }
+
+    const util = side === 'home' ? new UtilsHome(results) : new UtilsAway(results);
+    return AllResultsInUseCase.createCalculatedSide(util);
+  }
+
   private static calculateSide(side: string, teamResults: ModelTeamMatch)
     : CalculateSide {
-    let results: ModelMatches;
+    let results: ModelMatches | ModelTeamMatch;
     if (side === 'away') {
       results = teamResults.awayTeamMatches;
     } else if (side === 'home') {
       results = teamResults.homeTeamMatches;
     } else {
-      // return doAll(teamResults);
-      results = teamResults.homeTeamMatches;
+      results = teamResults;
     }
     return AllResultsInUseCase.calculate(results, side);
   }

@@ -19,7 +19,7 @@ export default class UtilsHome {
   private matchesPoints(): void {
     this.games.forEach((game) => {
       if (game.homeTeamGoals > game.awayTeamGoals) {
-        this.totalVictories = (Number(this.totalVictories) + 1);
+        this.totalVictories += 1;
       } else if (game.homeTeamGoals === game.awayTeamGoals) {
         this.totalDraws += 1;
       } else {

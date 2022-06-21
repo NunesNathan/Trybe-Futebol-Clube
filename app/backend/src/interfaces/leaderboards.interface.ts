@@ -16,6 +16,21 @@ export type LeaderboardResponse = {
 
 export type CalculateSide = Omit<LeaderboardResponse, 'name'>;
 
+export type AllLeaderboardsMixUp = {
+  _totalPoints: number,
+  _totalGames: number,
+  _totalVictories: number,
+  _totalDraws: number,
+  _totalLosses: number,
+  _goalsFavor: number,
+  _goalsOwn: number,
+};
+
+export type AllLeaderboardsBalances = {
+  _goalsBalance: number,
+  _efficiency: number,
+};
+
 export type LeaderboardsResponse = LeaderboardResponse[];
 
 export type AllResults = {
