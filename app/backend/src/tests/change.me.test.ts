@@ -4,42 +4,66 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Example from '../database/models/ExampleModel';
+import UserRepository from '../useCases/repositories/UserRepository';
 
 import { Response } from 'superagent';
+import { invalidUser, userResponse, validUser } from './repositories/UserRepository';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Seu teste', () => {
-  /**
-   * Exemplo do uso de stubs com tipos
-   */
+describe('User', () => {
+  let response: Response;
+  let repository: sinon.SinonStub;
 
-  // let chaiHttpResponse: Response;
+  describe('User Login', () => {
+    before(async () => {
+      repository = sinon
+        .stub(UserRepository.prototype, 'findByEmail')
+        .resolves(
+          userResponse
+        );
+    });
+  
+    after(()=>{
+      repository.restore();
+    })
 
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
+    it('Success case', async () => {
+      const { email, password } = validUser;
+      const response = await chai.request(app)
+        .post('/login')
+        .send({ email, password });
+      
+      expect(response).to.have.status(200);
 
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
+      expect(response.body).to.be.an('object');
+      expect(response.body).to.have.property('user');
+      expect(response.body).to.have.property('token');
 
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
+      expect(response.body.user).to.be.an('object');
+      expect(response.body.user).to.have.property('id');
+      expect(response.body.user).to.have.property('username');
+      expect(response.body.user).to.have.property('email');
+      expect(response.body.user).to.have.property('role');
 
-  //   expect(...)
-  // });
+      expect(response.body.token).to.be.a('string');
+    })
 
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
+    it('Fail case', async () => {
+      const { email, password } = invalidUser;
+      const response = await chai.request(app)
+        .post('/login')
+        .send({ email, password });
+      
+      expect(response).to.have.status(401);
+
+      expect(response.body).to.be.an('object');
+      expect(response.body).to.have.property('message');
+
+      expect(response.body.message).to.be.a('string');
+      expect(response.body.message).to.be.equals('Incorrect email or password');
+    })
   });
 });
